@@ -78,8 +78,6 @@ const user = useUserStore()
               <span class="is-drawer-close:hidden text-base ml-2 whitespace-nowrap">创作</span>
             </RouterLink>
           </li>
-
-
         </ul>
       </div>
     </div>
