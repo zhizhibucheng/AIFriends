@@ -10,7 +10,10 @@ watch(() => props.profile, newVal => {
 </script>
 
 <template>
-
+ <fieldset class="fieldset">
+   <label class="label text-base">简介</label>
+   <textarea v-model="myProfile" rows="6" class="textarea w-108"></textarea>
+ </fieldset>
 </template>
 
 <style scoped>
