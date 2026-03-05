@@ -61,6 +61,10 @@ function onFileChange(e) {
 onBeforeUnmount(() => {
   croppie?.destroy()
 })
+
+defineExpose({
+  myPhoto,
+})
 </script>
 
 <template>
