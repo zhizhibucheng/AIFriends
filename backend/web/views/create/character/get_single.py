@@ -10,15 +10,19 @@ class GetSingleCharacterView(APIView):
     def get(self, request):
         try:
             character_id = request.query_params.get('character_id')
-            character = Character.objects.get(id=character_id,author__user=request.user)
+            character = Character.objects.get(id=character_id, author__user=request.user)
             return Response({
-                'id': character.id,
-                'name': character.name,
-                'profile': character.profile,
-                'photo': character.photo.url,
-                'background_image': character.background_image.url,
+                 'result': 'success',
+                'character': {
+                    'id': character.id,
+                    'name': character.name,
+                    'profile': character.profile,
+                    'photo': character.photo.url,
+                    'background_image': character.background_image.url,
+                }
+
             })
         except:
             return Response({
-                'result':'系统异常，请稍后重试'
+                'result': '系统异常，请稍后重试'
             })
