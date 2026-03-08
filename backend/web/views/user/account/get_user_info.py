@@ -6,10 +6,10 @@ from web.models.user import UserProfile
 
 
 class GetUserInfoView(APIView):
-    permission_classes =[IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         try:
-            user =request.user
+            user = request.user
             user_profile = UserProfile.objects.get(user=user)
             return Response({
                 'result': 'success',
