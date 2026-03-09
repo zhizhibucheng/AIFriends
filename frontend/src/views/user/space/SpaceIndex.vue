@@ -38,7 +38,6 @@ async function loadMore(){
       newCharacters = data.characters
     }
   }catch(err){
-    console.log(err)
   }finally {
     isLoading.value = false
     if(newCharacters.length === 0){
@@ -62,7 +61,6 @@ onMounted(async () => {
       entries => {
         entries.forEach(entry => {
           if(entry.isIntersecting){
-            console.log('红色出现了')
             loadMore()
           }
         })
@@ -71,6 +69,10 @@ onMounted(async () => {
   )
   observer.observe(sentinelRef.value)
 })
+
+function removeCharacter(characterId){
+  characters.value = characters.value.filter(c => c.id !== characterId)
+}
 
 onBeforeUnmount(()=> {
   observer?.disconnect()
@@ -87,9 +89,10 @@ onBeforeUnmount(()=> {
          :key="character.id"
          :character="character"
          :canEdit="true"
+         @remove = 'removeCharacter'
      />
    </div>
-   <div ref="sentinel-ref" class="h-2 mt-8 w-100 bg-red-500"></div>
+   <div ref="sentinel-ref" class="h-2 mt-8"></div>
    <div v-if="isLoading" class="text-gray-500 mt-4">加载中</div>
    <div v-else-if="!hasCharacter" class="text-gray-500 mt-4">没有更多角色了</div>
  </div>
