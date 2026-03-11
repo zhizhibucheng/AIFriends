@@ -4,6 +4,7 @@ import SendIcon from "@/components/character/icons/SendIcon.vue";
 import MicIcon from "@/components/character/icons/MicIcon.vue";
 import {ref, useTemplateRef} from "vue";
 import streamApi from "@/js/http/streamApi.js";
+import Microphone from "@/components/character/chat_field/input_field/Microphone.vue";
 
 
 const props = defineProps(['friendId'])
@@ -11,6 +12,7 @@ const emit = defineEmits(['pushBackMessage','addTpoLastMessage'])
 const inputRef = useTemplateRef('input-ref')
 const message = ref('')
 let processId = 0
+const showMic = ref(false)
 function focus(){
   inputRef.value.focus();
 }
@@ -48,13 +50,20 @@ async function handleSend(){
   }
 }
 
+function close(){
+  ++ processId
+  showMic.value = false
+}
+
+
 defineExpose({
   focus,
+  close,
 })
 </script>
 
 <template>
- <form @submit.prevent="handleSend" class="absolute bottom-4 left-2 h-12 w-86 flex items-center">
+ <form v-if="!showMic" @submit.prevent="handleSend" class="absolute bottom-4 left-2 h-12 w-86 flex items-center">
    <input
        ref="input-ref"
        v-model="message"
@@ -65,10 +74,15 @@ defineExpose({
    <div @click="handleSend" class="absolute right-2 w-8 h-8 flex justify-center items-center cursor-pointer">
      <SendIcon/>
    </div>
-   <div class="absolute right-10 w-8 h-8 flex justify-center items-center cursor-pointer">
+   <div @click="showMic = true" class="absolute right-10 w-8 h-8 flex justify-center items-center cursor-pointer">
      <MicIcon/>
    </div>
  </form>
+ <Microphone
+     v-else
+     @close="showMic = false"
+
+ />
 </template>
 
 <style scoped>
