@@ -97,7 +97,7 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, fromnext) => {
+router.beforeEach((to, from) => {
   const user =useUserStore()
   if(to.meta.needLogin && user.hasPulledUserInfo &&!user.isLogin()){
     return{
