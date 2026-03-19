@@ -20,6 +20,8 @@ from web.views.user.account.refresh_token import RefreshTokenView
 from web.views.user.account.register import RegisterView
 from web.views.user.profile.update import UpdateProfileView
 from web.views.friend.get_or_create import GetOrCreateFriendView
+from web.views.create.character.voice.get_list import GetVoiceListView
+from web.views.create.character.voice.custom.create_custom import CreateCustomVoiceView
 
 urlpatterns = [
     path('api/user/account/login/', LoginView.as_view()),
@@ -33,6 +35,8 @@ urlpatterns = [
     path('api/create/character/remove/', RemoveCharacterView.as_view()),
     path('api/create/character/get_single/', GetSingleCharacterView.as_view()),
     path('api/create/character/get_list/', GetListCharacterView.as_view()),
+    path('api/create/character/voice/get_list/', GetVoiceListView.as_view()),
+    path('api/create/character/voice/custom/create/', CreateCustomVoiceView.as_view()),
     path('api/homepage/index/', HomepageIndexView.as_view()),
     path('api/friend/get_or_create/', GetOrCreateFriendView.as_view()),
     path('api/friend/remove/', RemoveFriendView.as_view()),
@@ -40,6 +44,8 @@ urlpatterns = [
     path('api/friend/message/chat/', MessageChatView.as_view()),
     path('api/friend/message/get_history/', GetHistoryView.as_view()),
     path('api/friend/message/asr/asr/', ASRView.as_view()),
+
+
 
     path('',index),
 

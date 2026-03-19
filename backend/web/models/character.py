@@ -16,10 +16,22 @@ def background_image_upload_to(instance, filename):
     filename = f'{uuid.uuid4().hex[:10]}.{ext}'
     return f'character/background_image/{instance.author.user_id}_{filename}'
 
+class Voice(models.Model):
+    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, blank=True)
+    is_public = models.BooleanField(default=True)
+    name = models.CharField(max_length=100)
+    voice_id = models.CharField(max_length=100)
+    created_time = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return f"{self.name} - {self.voice_id} - {localtime(self.created_time).strftime('%Y-%m-%d %H:%M:%S')}"
+
+
 class Character(models.Model):
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     photo = models.ImageField(upload_to=photo_upload_to)
+    voice = models.ForeignKey(Voice, default=None, on_delete=models.CASCADE, null=True, blank=True)
     profile = models.TextField(max_length=100000)
     background_image = models.ImageField(upload_to=background_image_upload_to)
     create_time = models.DateTimeField(default=now)

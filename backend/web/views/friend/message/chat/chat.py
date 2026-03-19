@@ -5,15 +5,13 @@ import os
 import threading
 import uuid
 from queue import Queue
-
-import aiohttp
 import websockets
 from django.http import StreamingHttpResponse
 from langchain_core.messages import HumanMessage, BaseMessageChunk, SystemMessage, AIMessage
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import BaseRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 
 from web.models.friend import Friend, Message, SystemPrompt
 from web.views.friend.message.chat.graph import ChatGraph
@@ -48,9 +46,11 @@ def add_recent_messages(state,friend):
         messages.append(AIMessage(m.output))
     return {'messages': msgs[:1] + messages + msgs[-1:]}
 
+
 class MessageChatView(APIView):
     permission_classes = [IsAuthenticated]
     renderer_classes = [SSERenderer]
+
     def post(self, request):
         friends_id = request.data['friend_id']
         message = request.data['message'].strip()
@@ -71,7 +71,6 @@ class MessageChatView(APIView):
         }
         inputs = add_system_prompt(inputs, friend)
         inputs = add_recent_messages(inputs, friend)
-
 
         response = StreamingHttpResponse(
             self.event_stream(app, inputs, friend, message),
@@ -110,7 +109,6 @@ class MessageChatView(APIView):
         }
         }))
 
-
     async def tts_receiver(self, mq, ws):
         async for msg in ws:
             if isinstance(msg, bytes):
@@ -121,7 +119,7 @@ class MessageChatView(APIView):
                 event = data['header']['event']
                 if event in ['task-finished', 'task-failed']:
                     break
-    async def run__tts_tasks(self, app, inputs, mq):
+    async def run__tts_tasks(self, app, inputs, mq, voice_id):
         task_id = uuid.uuid4().hex
         api_key = os.getenv('API_KEY')
         wss_url = os.getenv('WSS_URL')
@@ -142,7 +140,7 @@ class MessageChatView(APIView):
                     "model": "cosyvoice-v3-flash",
                     "parameters": {
                         "text_type": "PlainText",
-                        "voice": "longanyang",  # 音色
+                        "voice": voice_id,  # 音色
                         "format": "mp3",  # 音频格式
                         "sample_rate": 22050,  # 采样率
                         "volume": 50,  # 音量
@@ -161,15 +159,15 @@ class MessageChatView(APIView):
                 self.tts_receiver(mq, ws),
             )
 
-    def work(self, app, inputs, mq):
+    def work(self, app, inputs, mq, voice_id):
         try:
-            asyncio.run(self.run__tts_tasks(app, inputs, mq))
+            asyncio.run(self.run__tts_tasks(app, inputs, mq, voice_id))
         finally:
             mq.put_nowait(None)
 
     def event_stream(self, app, inputs, friend, message):
         mq = Queue()
-        thread =threading.Thread(target=self.work, args=(app, inputs, mq))
+        thread =threading.Thread(target=self.work, args=(app, inputs, mq, friend.character.voice.voice_id))
         thread.start()
 
         full_output = ''

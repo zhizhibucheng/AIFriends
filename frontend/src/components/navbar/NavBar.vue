@@ -34,12 +34,14 @@ function handleSearch(){
     <div class="drawer-content">
       <!-- Navbar -->
       <nav class="navbar w-full bg-base-100 shadow-sm">
-        <div class="navbar-start">
+        <div class="navbar-start flex items-center">
           <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost">
-            <!-- Sidebar toggle icon -->
             <MenuIcon />
           </label>
-          <div class="px-2 font-bold text-xl">AIFriends</div>
+          <div class="px-2 font-bold text-xl flex items-center gap-2">
+            <img src="/favicon.ico" alt="Logo" class="w-8 h-8" />
+            <span>AIFriends</span>
+          </div>
         </div>
 
         <div class="navbar-center w-4/5 max-w-180 flex justify-center">
