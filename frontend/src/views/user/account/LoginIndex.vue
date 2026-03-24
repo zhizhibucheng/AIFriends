@@ -45,11 +45,25 @@ async function handleLogin() {
     <form @submit.prevent="handleLogin" class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
 
 
-      <label class="label">用户名</label>
-      <input v-model="username" type="text" class="input" placeholder="用户名" />
+      <label class="label">
+        <span class="label-text text-base text-gray-700 font-bold">用户名</span>
+      </label>
+       <input
+          v-model="username"
+          type="text"
+          class="input input-bordered bg-base-100 text-base-content placeholder-gray-400"
+          placeholder="用户名"
+       />
 
-     <label class="label">密码</label>
-      <input v-model="password" type="password" class="input" placeholder="密码" />
+     <label class="label">
+       <span class="label-text text-base text-gray-700 font-bold">密码</span>
+     </label>
+      <input
+        v-model="password"
+        type="password"
+        class="input input-bordered bg-base-100 text-base-content placeholder-gray-400"
+        placeholder="密码"
+      />
 
      <p v-if="errorMessage" class="text-sm text-red-500 mt-1">{{errorMessage}}</p>
 
@@ -59,7 +73,7 @@ async function handleLogin() {
          注册
        </RouterLink>
      </div>
-</form>
+    </form>
 
   </div>
 </template>
