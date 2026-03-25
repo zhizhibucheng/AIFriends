@@ -18,6 +18,9 @@ class CreateCharacterView(APIView):
             photo = request.FILES.get('photo',None)
             background_image = request.FILES.get('background_image', None)
 
+            is_public_raw = request.data.get('is_public', True)
+            is_public = str(is_public_raw).lower() in ['true', '1', 't']
+
             if not name:
                 return Response({
                     'result': '名字不能为空'
@@ -44,6 +47,7 @@ class CreateCharacterView(APIView):
                 profile=profile,
                 photo=photo,
                 background_image=background_image,
+                is_public=is_public,
             )
             return Response({
                 'result': 'success',

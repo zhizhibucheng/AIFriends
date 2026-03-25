@@ -23,6 +23,7 @@ const errorMessage = ref('')
 
 const voices = ref([])
 const curVoiceId = ref(null)
+const isPublic = ref(true)
 
 
 onMounted(async ()=>{
@@ -63,6 +64,7 @@ async function handleCreate(){
     formData.append('profile', profile)
     formData.append('photo', base64ToFile(photo,'photo.png'))
     formData.append('background_image', base64ToFile(backgroundImage,'background_image.png'))
+    formData.append('is_public', isPublic.value)
 
     try{
       const res = await api.post('/api/create/character/create/', formData)
@@ -92,6 +94,15 @@ async function handleCreate(){
        <Photo ref="photo-ref"/>
        <Name ref="name-ref"/>
        <Voice ref="voice-ref" :voices="voices" :curVoiceId="curVoiceId"/>
+
+       <div class="mt-4">
+         <label class="label"><span class="label-text font-bold">可见性状态</span></label>
+         <select v-model="isPublic" class="select select-bordered w-full">
+           <option :value="true">公开</option>
+           <option :value="false">私密</option>
+         </select>
+       </div>
+
        <Profile ref="profile-ref"/>
        <BackgroundImage ref="background-image-ref"/>
 

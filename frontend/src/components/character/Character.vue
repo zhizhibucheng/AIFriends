@@ -1,5 +1,5 @@
 <script setup>
-import {ref, useTemplateRef} from "vue";
+import {onBeforeUnmount, ref, useTemplateRef} from "vue";
 import {useUserStore} from "@/stores/user.js";
 import UpdateCharacter from "@/views/create/character/UpdateCharacter.vue";
 import UpdateIcon from "@/components/character/icons/UpdateIcon.vue";
@@ -13,6 +13,18 @@ const emit = defineEmits(["remove"]);
 const isHover = ref(false)
 const user = useUserStore()
 const router = useRouter()
+
+const showErrorToast = ref(false)
+const errorMessage = ref("该角色已转为私密状态不可见，请刷新")
+const countdown = ref(5) // 新增：倒计时秒数
+let refreshTimer = null  // 新增：保存定时器实例
+
+function doRefresh() {
+  if (refreshTimer) {
+    clearInterval(refreshTimer) // 清除定时器
+  }
+  window.location.reload()
+}
 
 async function handleRemoveCharacter(){
   try{
@@ -57,13 +69,48 @@ async function openChatField(){
         chatFieldRef.value.showModal()
       }
     }catch(err){
+      if (err.response && err.response.status === 403) {
+        if (err.response.data && err.response.data.result) {
+          errorMessage.value = err.response.data.result
+        }
+        showErrorToast.value = true
+        countdown.value = 5 // 重置倒计时
+
+        // 如果已经有定时器，先清除
+        if (refreshTimer) clearInterval(refreshTimer)
+        // 开启每秒递减的定时器
+        refreshTimer = setInterval(() => {
+          countdown.value--
+          if (countdown.value <= 0) {
+            clearInterval(refreshTimer)
+            if (showErrorToast.value) { // 确认提示框没被提前关闭
+               doRefresh()
+            }
+          }
+        }, 1000)
+      }
     }
   }
 }
+
+// 组件卸载时清理定时器，防止内存泄漏
+onBeforeUnmount(() => {
+  if (refreshTimer) {
+    clearInterval(refreshTimer)
+  }
+})
+
 </script>
 
 <template>
  <div>
+
+   <div v-if="showErrorToast" class="toast toast-top toast-center z-[100]">
+     <div class="alert alert-error cursor-pointer shadow-lg" @click="doRefresh">
+       <span>{{ errorMessage }}({{ countdown }}秒后自动刷新)</span>
+     </div>
+   </div>
+
    <div class="avatar cursor-pointer" @mouseover="isHover = true" @mouseout="isHover = false" @click="openChatField">
      <div class="w-60 h-100 rounded-2xl relative">
        <img :src="character.background_image" class="transition-transform duration-300"  :class="{'scale-120':isHover}" alt="" >

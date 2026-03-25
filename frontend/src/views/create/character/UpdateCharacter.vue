@@ -21,6 +21,8 @@ const character = ref(null)
 const voices = ref([])
 const curVoiceId = ref(null)
 
+const isPublic = ref(true)
+
 
 onMounted(async ()=> {
   try{
@@ -34,6 +36,9 @@ onMounted(async ()=> {
       character.value = data.character
       voices.value = data.voices
       curVoiceId.value = data.character.voice_id
+      if (data.character.is_public !== undefined) {
+          isPublic.value = data.character.is_public
+      }
     }
   }catch(err){
   }
@@ -69,6 +74,7 @@ async function handleUpdate(){
     formData.append('name',name)
     formData.append('voice_id', voice)
     formData.append('profile', profile)
+    formData.append('is_public', isPublic.value)
     if(photo !== character.value.photo){
       formData.append('photo', base64ToFile(photo,'photo.png'))
     }
@@ -105,6 +111,15 @@ async function handleUpdate(){
        <Photo ref="photo-ref" :photo="character.photo"/>
        <Name ref="name-ref" :name="character.name"/>
        <Voice ref="voice-ref" :voices="voices" :curVoiceId="curVoiceId"/>
+
+       <div class="mt-4">
+         <label class="label"><span class="label-text font-bold">可见性状态</span></label>
+         <select v-model="isPublic" class="select select-bordered w-full">
+           <option :value="true">公开</option>
+           <option :value="false">私密</option>
+         </select>
+       </div>
+
        <Profile ref="profile-ref" :profile="character.profile"/>
        <BackgroundImage ref="background-image-ref" :backgroundImage="character.background_image"/>
 

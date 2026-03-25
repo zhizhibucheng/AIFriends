@@ -8,6 +8,17 @@ export const useUserStore =defineStore('user',()=>{
     const profile = ref('')
     const accessToken = ref('')
     const hasPulledUserInfo = ref(false)
+    const DEFAULT_BACKGROUND = '/media/user/app_backgrounds/default.png'
+
+    const appBackground = ref(DEFAULT_BACKGROUND)
+
+    function setAppBackground(newBackground) {
+        appBackground.value = newBackground
+    }
+
+    function restoreDefaultBackground() {
+        appBackground.value = DEFAULT_BACKGROUND
+    }
 
     function isLogin(){
         return !!accessToken.value
@@ -22,6 +33,10 @@ export const useUserStore =defineStore('user',()=>{
         username.value = data.username
         photo.value=data.photo
         profile.value=data.profile
+
+        if (data.app_background) {
+            appBackground.value = data.app_background
+        }
     }
 
     function logout(){
@@ -30,6 +45,7 @@ export const useUserStore =defineStore('user',()=>{
         photo.value = ''
         accessToken.value = ''
         profile.value = ''
+        appBackground.value = DEFAULT_BACKGROUND
     }
 
     function setHasPulledUserInfo(newStatus){
@@ -48,5 +64,8 @@ export const useUserStore =defineStore('user',()=>{
         isLogin,
         hasPulledUserInfo,
         setHasPulledUserInfo,
+        appBackground,
+        setAppBackground,
+        restoreDefaultBackground,
     }
 })

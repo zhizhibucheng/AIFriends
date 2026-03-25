@@ -17,6 +17,7 @@ class GetUserInfoView(APIView):
                 'username': user.username,
                 'photo': user_profile.photo.url,
                 'profile': user_profile.profile,
+                'app_background': user_profile.app_background.url,
             })
         except:
             return Response({

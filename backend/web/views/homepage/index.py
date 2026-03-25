@@ -12,10 +12,10 @@ class HomepageIndexView(APIView):
             search_query = request.query_params.get('search_query', '').strip()
             if search_query:
                 queryset = Character.objects.filter(
-                    Q(name__icontains=search_query) | Q(profile__icontains=search_query)
+                    (Q(name__icontains=search_query) | Q(profile__icontains=search_query)) & Q(is_public=True)
                 )
             else:
-                queryset = Character.objects.all()
+                queryset = Character.objects.filter(is_public=True)
             characters_raw = queryset.order_by('-id')[items_count:items_count+20]
             characters = []
             for character in characters_raw:

@@ -1,5 +1,4 @@
 <script setup>
-
 import MenuIcon from "@/components/navbar/icons/MenuIcon.vue";
 import HomePageIcon from "@/components/navbar/icons/HomePageIcon.vue";
 import FriendIcon from "@/components/navbar/icons/FriendIcon.vue";
@@ -29,11 +28,11 @@ function handleSearch(){
 </script>
 
 <template>
-  <div class="drawer lg:drawer-open">
+  <div class="drawer lg:drawer-open bg-transparent">
     <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content">
-      <!-- Navbar -->
-      <nav class="navbar w-full bg-base-100 shadow-sm">
+    <div class="drawer-content bg-transparent">
+
+      <nav class="navbar w-full bg-base-100/10 backdrop-blur-xl shadow-sm z-50">
         <div class="navbar-start flex items-center">
           <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost">
             <MenuIcon />
@@ -46,8 +45,8 @@ function handleSearch(){
 
         <div class="navbar-center w-4/5 max-w-180 flex justify-center">
           <form @submit.prevent="handleSearch" class="join w-4/5 flex justify-center">
-            <input v-model="searchQuery" class="input join-item rounded-l-full w-4/5" placeholder="搜索你感兴趣的内容" />
-            <button class="btn join-item rounded-r-full gap-0">
+            <input v-model="searchQuery" class="input join-item rounded-l-full w-4/5 bg-base-200/40" placeholder="搜索你感兴趣的内容" />
+            <button class="btn join-item rounded-r-full gap-0 bg-base-200/20 border-none hover:bg-base-300">
               <SearchIcon />
               搜索
             </button>
@@ -66,33 +65,28 @@ function handleSearch(){
         </div>
 
       </nav>
-      <!-- Page content here -->
       <slot></slot>
     </div>
 
-    <div class="drawer-side is-drawer-close:overflow-visible">
+    <div class="drawer-side is-drawer-close:overflow-visible z-40">
       <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
-      <div class="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-16 is-drawer-open:w-54">
-        <!-- Sidebar content here -->
+
+      <div class="flex min-h-full flex-col items-start bg-base-200/10 backdrop-blur-xl is-drawer-close:w-16 is-drawer-open:w-54 border-r border-base-content/5">
         <ul class="menu w-full grow">
-          <!-- List item -->
           <li>
             <RouterLink :to="{name:'homepage-index'}" active-class="menu-focus" class="is-drawer-close:tooltip-right py-3" data-tip="首页">
-              <!-- Home icon -->
               <HomePageIcon />
               <span class="is-drawer-close:hidden text-base ml-2 whitespace-nowrap">首页</span>
             </RouterLink>
           </li>
           <li>
             <RouterLink :to="{name:'friend-index'}" active-class="menu-focus" class="is-drawer-close:tooltip is-drawer-close:tooltip-right py-3" data-tip="好友">
-              <!-- Home icon -->
               <FriendIcon />
               <span class="is-drawer-close:hidden text-base ml-2 whitespace-nowrap">好友</span>
             </RouterLink>
           </li>
           <li>
             <RouterLink :to="{name:'create-index'}" active-class="menu-focus" class="is-drawer-close:tooltip is-drawer-close:tooltip-right py-3" data-tip="创作">
-              <!-- Home icon -->
               <CreateIcon />
               <span class="is-drawer-close:hidden text-base ml-2 whitespace-nowrap">创作</span>
             </RouterLink>

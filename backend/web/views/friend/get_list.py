@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -12,6 +13,8 @@ class GetListFriendView(APIView):
             items_count = int(request.query_params.get('items_count', 0))
             friends_raw = Friend.objects.filter(
                 me__user=request.user,
+            ).filter(
+                Q(character__is_public=True) | Q(character__author__user=request.user)
             ).order_by('-update_time')[items_count:items_count+20]
             friends = []
             for friend in friends_raw:

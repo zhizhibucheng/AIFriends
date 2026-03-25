@@ -32,9 +32,26 @@ onMounted(async ()=>{
 </script>
 
 <template>
-  <NavBar >
-    <RouterView />
-  </NavBar>
+  <div
+    class="min-h-screen transition-all duration-500"
+    :style="user.appBackground ? {
+      backgroundImage: `url(${user.appBackground})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      backgroundColor: 'transparent'
+    } : {
+      backgroundColor: 'var(--fallback-b1,oklch(var(--b1)/1))'
+    }"
+  >
+    <NavBar >
+      <RouterView />
+    </NavBar>
+  </div>
+
+<!--  <NavBar >-->
+<!--    <RouterView />-->
+<!--  </NavBar>-->
 </template>
 
 <style scoped>

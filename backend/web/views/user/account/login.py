@@ -26,6 +26,7 @@ class LoginView(APIView):
                     'username': user.username,
                     'photo': user_profile.photo.url,
                     'profile': user_profile.profile,
+                    'app_background': user_profile.app_background.url,
                 })
                 response.set_cookie(
                     key='refresh_token',

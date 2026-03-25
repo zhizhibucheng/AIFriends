@@ -42,7 +42,7 @@ async function handleLogin() {
 
 <template>
   <div class="flex justify-center mt-30">
-    <form @submit.prevent="handleLogin" class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+    <form @submit.prevent="handleLogin" class="fieldset bg-base-200/20 border-base-300 rounded-box w-xs border p-4">
 
 
       <label class="label">
@@ -51,7 +51,7 @@ async function handleLogin() {
        <input
           v-model="username"
           type="text"
-          class="input input-bordered bg-base-100 text-base-content placeholder-gray-400"
+          class="input input-bordered bg-base-100/70 text-base-content placeholder-gray-400"
           placeholder="用户名"
        />
 
@@ -61,7 +61,7 @@ async function handleLogin() {
       <input
         v-model="password"
         type="password"
-        class="input input-bordered bg-base-100 text-base-content placeholder-gray-400"
+        class="input input-bordered bg-base-100/70 text-base-content placeholder-gray-400"
         placeholder="密码"
       />
 
@@ -69,7 +69,7 @@ async function handleLogin() {
 
      <button class="btn btn-neutral mt-4">登录</button>
      <div class="flex justify-end">
-       <RouterLink :to="{name:'user-account-register-index'}" class="btn btn-sm btn-ghost text-gray-500">
+       <RouterLink :to="{name:'user-account-register-index'}" class="btn btn-md btn-ghost text-gray-500">
          注册
        </RouterLink>
      </div>

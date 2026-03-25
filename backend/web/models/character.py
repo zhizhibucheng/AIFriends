@@ -34,8 +34,9 @@ class Character(models.Model):
     voice = models.ForeignKey(Voice, default=None, on_delete=models.CASCADE, null=True, blank=True)
     profile = models.TextField(max_length=100000)
     background_image = models.ImageField(upload_to=background_image_upload_to)
+    is_public = models.BooleanField(default=True, verbose_name="是否公开")
     create_time = models.DateTimeField(default=now)
     update_time = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"{self.author.user.username} - {self.name} - {localtime(self.create_time).strftime('%Y-%m-%d %H:%M:%S')}"
+        return f"{self.author.user.username} - {'公开' if self.is_public else '私密'} - {self.name} - {localtime(self.create_time).strftime('%Y-%m-%d %H:%M:%S')}"

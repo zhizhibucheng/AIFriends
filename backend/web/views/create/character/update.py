@@ -20,6 +20,10 @@ class UpdateCharacterView(APIView):
             photo = request.FILES.get('photo', None)
             background_image = request.FILES.get('background_image', None)
 
+            if 'is_public' in request.data:
+                is_public_raw = request.data.get('is_public')
+                character.is_public = str(is_public_raw).lower() in ['true', '1', 't']
+
             if not name:
                 return Response({
                     'result': '名字不能为空',
