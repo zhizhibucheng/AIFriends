@@ -14,6 +14,7 @@ const photoRef = useTemplateRef('photo-ref')
 const usernameRef = useTemplateRef('username-ref')
 const profileRef = useTemplateRef('profile-ref')
 const errorMessage = ref('')
+const successMessage = ref('')
 
 async function handleUpdate() {
   const photo = photoRef.value.myPhoto
@@ -21,6 +22,7 @@ async function handleUpdate() {
   const profile = profileRef.value.myProfile.trim()
 
   errorMessage.value = ''
+  successMessage.value = ''
   if(!photo){
     errorMessage.value='头像不能为空'
   }else if(!username){
@@ -39,6 +41,10 @@ async function handleUpdate() {
       const data = res.data
       if(data.result === 'success'){
         user.setUserInfo(data)
+        successMessage.value = '资料更新成功！'
+        setTimeout(() => {
+          successMessage.value = ''
+        }, 3000)
       }else{
         errorMessage.value = data.result
       }
@@ -50,14 +56,15 @@ async function handleUpdate() {
 
 <template>
   <div class="flex justify-center">
-    <div class="card w-120 bg-base-200 shadow-sm mt-16">
+    <div class="card w-11/12 sm:w-120 bg-base-200/70 shadow-sm mt-16">
       <div class="card-body ">
         <h3 class="text-lg font-bold my-4">编辑资料</h3>
         <Photo ref="photo-ref" :photo="user.photo"/>
         <Username ref="username-ref" :username="user.username"/>
         <Profile ref="profile-ref" :profile="user.profile" />
 
-        <p v-if="errorMessage" class="text-sm text-red-500">{{errorMessage}}</p>
+        <p v-if="errorMessage" class="text-sm text-red-500 mt-2">{{errorMessage}}</p>
+        <p v-if="successMessage" class="text-sm text-green-500 mt-2">{{successMessage}}</p>
 
         <div class="flex justify-center">
           <button @click="handleUpdate" class="btn btn-neutral w-60 mt-2">更新</button>

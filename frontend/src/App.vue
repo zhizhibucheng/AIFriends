@@ -33,25 +33,23 @@ onMounted(async ()=>{
 
 <template>
   <div
-    class="min-h-screen transition-all duration-500"
+    class="fixed inset-0 z-[-1] transition-all duration-500"
     :style="user.appBackground ? {
       backgroundImage: `url(${user.appBackground})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundAttachment: 'fixed',
+      /* 注意：这里移除了 backgroundAttachment: 'fixed'，因为外层使用了 fixed 定位，已经达到了固定视口的效果，且移动端兼容性更好 */
       backgroundColor: 'transparent'
     } : {
       backgroundColor: 'var(--fallback-b1,oklch(var(--b1)/1))'
     }"
-  >
-    <NavBar >
+  ></div>
+
+  <div class="min-h-screen overflow-x-hidden">
+    <NavBar>
       <RouterView />
     </NavBar>
   </div>
-
-<!--  <NavBar >-->
-<!--    <RouterView />-->
-<!--  </NavBar>-->
 </template>
 
 <style scoped>

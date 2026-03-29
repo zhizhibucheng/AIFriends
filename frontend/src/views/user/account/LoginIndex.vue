@@ -43,8 +43,6 @@ async function handleLogin() {
 <template>
   <div class="flex justify-center mt-30">
     <form @submit.prevent="handleLogin" class="fieldset bg-base-200/20 border-base-300 rounded-box w-xs border p-4">
-
-
       <label class="label">
         <span class="label-text text-base text-gray-700 font-bold">用户名</span>
       </label>

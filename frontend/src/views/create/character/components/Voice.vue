@@ -106,7 +106,7 @@ defineExpose({
 <template>
   <fieldset class="fieldset">
     <label class="label text-base">音色</label>
-    <select v-model="myVoice" class="select">
+    <select v-model="myVoice" class="select w-full bg-base-100/70">
       <option
           v-for="voice in voices"
           :id="voice.id"

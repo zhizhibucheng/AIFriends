@@ -105,7 +105,7 @@ async function handleUpdate(){
 
 <template>
  <div v-if="character" class="flex justify-center">
-   <div class="card w-120 bg-base-200 shadow-sm mt-16">
+   <div class="card w-11/12 sm:w-120 bg-base-200/70 shadow-sm mt-16">
      <div class="card-body">
        <h3 class="text-lg font-bold my-4">更新角色</h3>
        <Photo ref="photo-ref" :photo="character.photo"/>
@@ -114,7 +114,7 @@ async function handleUpdate(){
 
        <div class="mt-4">
          <label class="label"><span class="label-text font-bold">可见性状态</span></label>
-         <select v-model="isPublic" class="select select-bordered w-full">
+         <select v-model="isPublic" class="select select-bordered w-full bg-base-100/70">
            <option :value="true">公开</option>
            <option :value="false">私密</option>
          </select>

@@ -33,32 +33,33 @@ function handleSearch(){
     <div class="drawer-content bg-transparent">
 
       <nav class="navbar w-full bg-base-100/10 backdrop-blur-xl shadow-sm z-50">
-        <div class="navbar-start flex items-center">
+
+        <div class="navbar-start w-auto flex items-center">
           <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost">
             <MenuIcon />
           </label>
           <div class="px-2 font-bold text-xl flex items-center gap-2">
             <img src="/favicon.ico" alt="Logo" class="w-8 h-8" />
-            <span>AIFriends</span>
+            <span class="hidden sm:block">AIFriends</span>
           </div>
         </div>
 
-        <div class="navbar-center w-4/5 max-w-180 flex justify-center">
-          <form @submit.prevent="handleSearch" class="join w-4/5 flex justify-center">
-            <input v-model="searchQuery" class="input join-item rounded-l-full w-4/5 bg-base-200/40" placeholder="搜索你感兴趣的内容" />
-            <button class="btn join-item rounded-r-full gap-0 bg-base-200/20 border-none hover:bg-base-300">
+        <div class="navbar-center flex-1 flex justify-center px-2">
+          <form @submit.prevent="handleSearch" class="join w-full max-w-xl flex justify-center">
+            <input v-model="searchQuery" class="input join-item rounded-l-full w-full bg-base-200/40 min-w-0 px-3 text-sm sm:text-base" placeholder="搜索内容" />
+            <button class="btn join-item rounded-r-full gap-1 bg-base-200/20 border-none hover:bg-base-300 px-3 sm:px-4">
               <SearchIcon />
-              搜索
+              <span class="hidden sm:inline">搜索</span>
             </button>
           </form>
         </div>
 
-        <div class="navbar-end">
-          <RouterLink v-if="user.isLogin()" :to="{name:'create-index'}" active-class="btn-active" class="btn btn-ghost text-base mr-6">
+        <div class="navbar-end w-auto">
+          <RouterLink v-if="user.isLogin()" :to="{name:'create-index'}" active-class="btn-active" class="btn btn-ghost text-base sm:mr-6 px-2 sm:px-4">
             <CreateIcon />
-            创作
+            <span class="hidden sm:inline">创作</span>
           </RouterLink>
-          <RouterLink v-if="user.hasPulledUserInfo && !user.isLogin()" :to="{name:'user-account-login-index'}"active-class="btn-active" class="btn btn-ghost text-lg">
+          <RouterLink v-if="user.hasPulledUserInfo && !user.isLogin()" :to="{name:'user-account-login-index'}" active-class="btn-active" class="btn btn-ghost text-base sm:text-lg px-3 sm:px-4">
             登录
           </RouterLink>
           <UserMenu v-else-if="user.isLogin()" />
@@ -68,10 +69,10 @@ function handleSearch(){
       <slot></slot>
     </div>
 
-    <div class="drawer-side is-drawer-close:overflow-visible z-40">
+    <div class="drawer-side is-drawer-close:overflow-visible z-[60]">
       <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
 
-      <div class="flex min-h-full flex-col items-start bg-base-200/10 backdrop-blur-xl is-drawer-close:w-16 is-drawer-open:w-54 border-r border-base-content/5">
+      <div class="flex min-h-full flex-col items-start bg-base-200/40 backdrop-blur-xl is-drawer-close:w-16 is-drawer-open:w-54 border-r border-base-content/5">
         <ul class="menu w-full grow">
           <li>
             <RouterLink :to="{name:'homepage-index'}" active-class="menu-focus" class="is-drawer-close:tooltip-right py-3" data-tip="首页">

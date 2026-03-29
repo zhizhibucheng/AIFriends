@@ -1,4 +1,4 @@
-const platform = 'cloud'
+const platform = 'vue'
 
 const CONFIG_API = {
     HTTP_URL:'',
