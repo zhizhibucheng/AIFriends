@@ -33,7 +33,10 @@ SECRET_KEY = 'django-insecure-3z7m2t(zqwg*u6it)v^de$b*ak6gjw!d5n++%wic&&qri#0ers
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'app7848.acapp.acwing.com.cn']
+ALLOWED_HOSTS = ['127.0.0.1',
+                 'zhizhibuchengai.com.cn',       # 添加新顶级域名
+                 'www.zhizhibuchengai.com.cn',   # 添加新 www 域名
+                 ]
 
 
 # Application definition
@@ -140,7 +143,7 @@ else:
 if DEBUG:
     MEDIA_URL = 'http://127.0.0.1:8000/media/'
 else:
-    MEDIA_URL = 'https://app7848.acapp.acwing.com.cn/media/'
+    MEDIA_URL = 'https://zhizhibuchengai.com.cn/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 

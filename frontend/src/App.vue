@@ -45,7 +45,7 @@ onMounted(async ()=>{
     }"
   ></div>
 
-  <div class="min-h-screen overflow-x-hidden">
+  <div class="h-screen overflow-hidden">
     <NavBar>
       <RouterView />
     </NavBar>

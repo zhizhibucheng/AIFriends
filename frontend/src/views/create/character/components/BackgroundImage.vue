@@ -20,9 +20,17 @@ async function openModal(photo){
   await nextTick()
 
   if(!croppie){
+    const isMobile = window.innerWidth < 600;
+
     croppie = new Croppie(croppieRef.value, {
-      viewport: {width: 300, height: 500},
-      boundary: {width: 600, height: 600},
+      viewport: {
+        width: isMobile ? 180 : 300,
+        height: isMobile ? 300 : 500
+      },
+      boundary: {
+        width: isMobile ? 280 : 400,
+        height: isMobile ? 400 : 600
+      },
       enableOrientation: true,
       enforceBoundary: true,
     })

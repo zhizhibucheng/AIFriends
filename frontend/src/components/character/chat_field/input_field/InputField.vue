@@ -8,7 +8,7 @@ import Microphone from "@/components/character/chat_field/input_field/Microphone
 
 
 const props = defineProps(['friendId'])
-const emit = defineEmits(['pushBackMessage','addToLastMessage'])
+const emit = defineEmits(['pushBackMessage','addToLastMessage', 'focus'])
 const inputRef = useTemplateRef('input-ref')
 const message = ref('')
 let processId = 0
@@ -168,13 +168,14 @@ defineExpose({
 </script>
 
 <template>
- <form v-if="!showMic" @submit.prevent="handleSend" class="absolute bottom-4 left-2 h-12 w-86 flex items-center">
+ <form v-if="!showMic" @submit.prevent="handleSend" class="absolute bottom-4 left-2 right-2 h-12 flex items-center">
    <input
        ref="input-ref"
        v-model="message"
        class="input bg-black/30 backdrop-blur-sm text-white text-base w-full h-full rounded-2xl pr-20"
        type="text"
        placeholder="文本输入..."
+       @focus="emit('focus')"
    >
    <div @click="handleSend" class="absolute right-2 w-8 h-8 flex justify-center items-center cursor-pointer">
      <SendIcon/>

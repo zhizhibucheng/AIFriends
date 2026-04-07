@@ -35,7 +35,7 @@ class CreateCustomVoiceView(APIView):
         # 拼接可通过公网访问的 URL
         # request.build_absolute_uri 可以动态获取当前服务器域名
         # 如果你部署在服务器上且使用了 Nginx 反向代理，导致获取到的是 http，建议直接写死你的域名，例如：
-        audio_url = f"https://app7848.acapp.acwing.com.cn/media/{saved_path}"
+        audio_url = f"https://zhizhibuchengai.com.cn/media/{saved_path}"
 
         # 调用阿里云接口复刻声音
         prefix = uuid.uuid4().hex[:10]

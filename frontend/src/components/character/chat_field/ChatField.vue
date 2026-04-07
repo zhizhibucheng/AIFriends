@@ -48,6 +48,18 @@ function handleClose(){
   inputRef.value.close()
 }
 
+function handleKeyboardPop() {
+  // 手机端软键盘弹出有动画延迟，分几个时间点滚动，确保能完全触底
+  const delays = [100, 300, 500];
+  delays.forEach(delay => {
+    setTimeout(() => {
+      if (chatHistoryRef.value) {
+        chatHistoryRef.value.scrollToBottom()
+      }
+    }, delay)
+  })
+}
+
 defineExpose({
   showModal,
 })
@@ -55,7 +67,7 @@ defineExpose({
 
 <template>
  <dialog ref="modal-ref" class="modal" @close="handleClose">
-   <div class="modal-box w-90 h-150" :style="modalStyle">
+   <div class="modal-box w-90 h-[85vh] max-h-[600px]" :style="modalStyle">
      <button @click="modalRef.close()" class="btn btn-sm btn-circle btn-ghost bg-transparent absolute right-1 top-1">✕</button>
      <ChatHistory
          ref="chat-history-ref"
@@ -71,6 +83,7 @@ defineExpose({
          :friendId="friend.id"
          @pushBackMessage="handlePushBackMessage"
          @addToLastMessage="handleAddToLastMessage"
+         @focus="handleKeyboardPop"
      />
      <CharacterPhotoField v-if="friend" :character="friend.character"/>
    </div>

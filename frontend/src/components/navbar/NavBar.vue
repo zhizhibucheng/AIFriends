@@ -28,11 +28,12 @@ function handleSearch(){
 </script>
 
 <template>
-  <div class="drawer lg:drawer-open bg-transparent">
+  <div class="drawer lg:drawer-open bg-transparent h-full">
     <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content bg-transparent">
 
-      <nav class="navbar w-full bg-base-100/10 backdrop-blur-xl shadow-sm z-50">
+    <div class="drawer-content bg-transparent flex flex-col h-full overflow-hidden relative">
+
+      <nav class="navbar w-full bg-base-100/10 backdrop-blur-xl shadow-sm z-50 flex-none">
 
         <div class="navbar-start w-auto flex items-center">
           <label for="my-drawer-4" aria-label="open sidebar" class="btn btn-square btn-ghost">
@@ -66,13 +67,16 @@ function handleSearch(){
         </div>
 
       </nav>
-      <slot></slot>
+
+      <div class="flex-1 overflow-y-auto">
+        <slot></slot>
+      </div>
     </div>
 
-    <div class="drawer-side is-drawer-close:overflow-visible z-[60]">
+    <div class="drawer-side is-drawer-close:overflow-visible z-[60] h-full">
       <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
 
-      <div class="flex min-h-full flex-col items-start bg-base-200/40 backdrop-blur-xl is-drawer-close:w-16 is-drawer-open:w-54 border-r border-base-content/5">
+      <div class="flex h-full flex-col items-start bg-base-200/40 backdrop-blur-xl is-drawer-close:w-16 is-drawer-open:w-54 border-r border-base-content/5">
         <ul class="menu w-full grow">
           <li>
             <RouterLink :to="{name:'homepage-index'}" active-class="menu-focus" class="is-drawer-close:tooltip-right py-3" data-tip="首页">
