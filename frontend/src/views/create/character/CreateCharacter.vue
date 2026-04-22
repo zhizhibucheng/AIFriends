@@ -95,13 +95,13 @@ async function handleCreate(){
        <Name ref="name-ref"/>
        <Voice ref="voice-ref" :voices="voices" :curVoiceId="curVoiceId"/>
 
-       <div class="mt-4">
-         <label class="label"><span class="label-text font-bold">可见性状态</span></label>
+       <fieldset class="fieldset mt-4 w-full">
+         <legend class="fieldset-legend text-base font-bold">可见性状态</legend>
          <select v-model="isPublic" class="select select-bordered w-full bg-base-100/70">
            <option :value="true">公开</option>
            <option :value="false">私密</option>
          </select>
-       </div>
+       </fieldset>
 
        <Profile ref="profile-ref"/>
        <BackgroundImage ref="background-image-ref"/>

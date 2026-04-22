@@ -74,7 +74,7 @@ defineExpose({
 
 <template>
  <fieldset class="fieldset">
-   <label class="label text-base">聊天背景</label>
+   <legend class="fieldset-legend text-base font-bold">聊天背景</legend>
    <div class="avatar relative">
      <div v-if="myBackgroundImage" class="w-15 h-25 rounded-box">
        <img :src="myBackgroundImage"  alt=""/>
