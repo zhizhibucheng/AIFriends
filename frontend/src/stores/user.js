@@ -12,6 +12,9 @@ export const useUserStore =defineStore('user',()=>{
 
     const appBackground = ref(DEFAULT_BACKGROUND)
 
+    const isVerified = ref(false)
+    const isMinor = ref(false)
+
     function setAppBackground(newBackground) {
         appBackground.value = newBackground
     }
@@ -34,6 +37,9 @@ export const useUserStore =defineStore('user',()=>{
         photo.value=data.photo
         profile.value=data.profile
 
+        isVerified.value = data.is_verified || false
+        isMinor.value = data.is_minor || false
+
         if (data.app_background) {
             appBackground.value = data.app_background
         }
@@ -46,10 +52,18 @@ export const useUserStore =defineStore('user',()=>{
         accessToken.value = ''
         profile.value = ''
         appBackground.value = DEFAULT_BACKGROUND
+
+        isVerified.value = false
+        isMinor.value = false
     }
 
     function setHasPulledUserInfo(newStatus){
         hasPulledUserInfo.value = newStatus
+    }
+
+    function setVerifyStatus(verified, minor) {
+        isVerified.value = verified
+        isMinor.value = minor
     }
 
     return {
@@ -67,5 +81,8 @@ export const useUserStore =defineStore('user',()=>{
         appBackground,
         setAppBackground,
         restoreDefaultBackground,
+        isVerified,
+        isMinor,
+        setVerifyStatus, // 导出新方法
     }
 })

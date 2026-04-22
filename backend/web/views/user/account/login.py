@@ -27,6 +27,8 @@ class LoginView(APIView):
                     'photo': user_profile.photo.url,
                     'profile': user_profile.profile,
                     'app_background': user_profile.app_background.url,
+                    'is_verified': user_profile.is_verified,
+                    'is_minor': user_profile.is_minor,
                 })
                 response.set_cookie(
                     key='refresh_token',

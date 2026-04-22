@@ -16,7 +16,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import mimetypes
+import os
+# ...
 
+# 实名认证 APISpace Token
+APISPACE_TOKEN = os.environ.get('APISPACE_TOKEN', '')
 mimetypes.add_type("application/javascript", ".mjs", True)
 
 

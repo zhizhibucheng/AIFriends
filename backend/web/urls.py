@@ -22,6 +22,7 @@ from web.views.user.profile.update import UpdateProfileView
 from web.views.friend.get_or_create import GetOrCreateFriendView
 from web.views.create.character.voice.get_list import GetVoiceListView
 from web.views.create.character.voice.custom.create_custom import CreateCustomVoiceView
+from web.views.user.account.verify import VerifyUserView
 
 urlpatterns = [
     path('api/user/account/login/', LoginView.as_view()),
@@ -44,6 +45,7 @@ urlpatterns = [
     path('api/friend/message/chat/', MessageChatView.as_view()),
     path('api/friend/message/get_history/', GetHistoryView.as_view()),
     path('api/friend/message/asr/asr/', ASRView.as_view()),
+    path('api/user/account/verify/', VerifyUserView.as_view()),
 
 
 

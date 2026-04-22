@@ -24,7 +24,18 @@ class GetOrCreateFriendView(APIView):
                 # 返回特定的业务错误，配合 HTTP 403 状态码供前端轻易捕获
                 return Response({'result': '该角色已不可见，请刷新'}, status=403)
 
+
+
             user_profile = UserProfile.objects.get(user=user)
+
+            if not user_profile.is_verified:
+                # 状态码使用 403，配合前端 Character.vue 里的 catch 逻辑
+                return Response({'result': '为了您的体验，请先完成实名认证'}, status=403)
+
+            if user_profile.is_minor:
+                # 状态码使用 403，前端会自动弹窗倒计时提示
+                return Response({'result': '根据相关法规，未成年人无法使用AI互动聊天服务'}, status=403)
+
             friends = Friend.objects.filter(character_id=character_id,me=user_profile)
             if friends.exists():
                 friend = friends.first()

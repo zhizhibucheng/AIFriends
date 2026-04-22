@@ -58,6 +58,14 @@ async function openChatField(){
     await router.push({
       name: 'user-account-login-index',
     })
+    return
+  }
+  if (!user.isVerified) {
+    router.push({ name: 'user-verify-index' })
+    return
+  }
+  if (user.isMinor) {
+    alert('根据《人工智能拟人化互动服务管理暂行办法》规定，未成年人无法使用AI聊天服务。')
   }else {
     try{
       const res = await api.post('/api/friend/get_or_create/',{
