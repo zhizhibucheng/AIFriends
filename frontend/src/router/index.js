@@ -129,7 +129,7 @@ router.beforeEach((to, from) => {
 
     // 3. 新增：未成年人一刀切拦截
     // 如果用户是未成年人，且试图访问聊天相关页面（即 /friend/ 路由）
-    if (user.isMinor && to.path.startsWith('/friend/')) {
+    if (user.isMinor && (to.name === 'friend-index' || to.path.startsWith('/friend'))) {
         // 弹出警告提示（你可以根据需要换成更优雅的组件如 ElMessage）
         alert('根据相关法规，未成年人无法使用本系统的AI互动聊天服务。')
         // 阻断跳转，停留在当前页（如果是直接输入网址，则退回首页）

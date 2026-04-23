@@ -19,15 +19,28 @@ onMounted(async ()=>{
     }
   }catch(error){
 
-  }finally {
-    user.setHasPulledUserInfo(true)
-
-    if(route.meta.needLogin && !user.isLogin()){
-      await router.replace({
-        name: 'user-account-login-index',
-      })
-    }
   }
+
+  user.setHasPulledUserInfo(true)
+
+  if(route.meta.needLogin && !user.isLogin()){
+    await router.replace({
+      name: 'user-account-login-index',
+    })
+    return
+  }
+    // 2. 实名认证检查：已登录但访问需要认证的页面，且用户未认证
+  if (user.isLogin() && route.meta.needVerified && !user.isVerified) {
+    await router.replace({ name: 'user-verify-index' })
+    return
+  }
+
+    // 3. 未成年人一刀切拦截
+  if (user.isLogin() && user.isMinor && (route.name === 'friend-index' || route.path.startsWith('/friend'))) {
+    alert('根据相关法规，未成年人无法使用本系统的AI互动聊天服务。')
+    await router.replace({ name: 'homepage-index' })
+  }
+
 })
 </script>
 
