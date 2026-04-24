@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from web.models.user import UserProfile
-
+import hashlib
 
 class VerifyUserView(APIView):
     # 必须登录后才能进行实名认证
@@ -24,9 +24,14 @@ class VerifyUserView(APIView):
         if not re.match(r'^\d{17}[\dXx]$', id_card_number):
             return Response({'error': '身份证号格式不正确'}, status=400)
 
-        # 2. 检查该身份证是否已被其他账号绑定
-        if UserProfile.objects.filter(id_card_number=id_card_number).exclude(user=user).exists():
+        # ================== 核心安全修改：哈希防重 ==================
+        # 生成身份证号的不可逆 SHA-256 哈希值
+        id_card_hash = hashlib.sha256(id_card_number.encode('utf-8')).hexdigest()
+
+        # 检查该哈希值是否已被其他账号绑定（不比较明文，安全！）
+        if UserProfile.objects.filter(id_card_hash=id_card_hash).exclude(user=user).exists():
             return Response({'error': '该身份证已被其他账号实名认证'}, status=400)
+        # ==========================================================
 
         api_url = 'https://eolink.o.apispace.com/identity-two/name_number'  # 替换为服务商提供的真实URL
         app_token = settings.APISPACE_TOKEN
@@ -86,8 +91,10 @@ class VerifyUserView(APIView):
 
         # 5. 更新数据库信息
         profile = UserProfile.objects.get(user=user)
+
         profile.real_name = real_name
         profile.id_card_number = id_card_number
+        profile.id_card_hash = id_card_hash  # 存入防重复的哈希值
         profile.is_verified = True
         profile.is_minor = is_minor
         profile.birth_date = birth_date

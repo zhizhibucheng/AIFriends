@@ -15,6 +15,11 @@ export const useUserStore =defineStore('user',()=>{
     const isVerified = ref(false)
     const isMinor = ref(false)
 
+    // === 新增：保存后端的脱敏实名信息 ===
+    const realNameMasked = ref('')
+    const idCardMasked = ref('')
+    // ===================================
+
     function setAppBackground(newBackground) {
         appBackground.value = newBackground
     }
@@ -39,6 +44,11 @@ export const useUserStore =defineStore('user',()=>{
 
         isVerified.value = data.is_verified || false
         isMinor.value = data.is_minor || false
+
+        // === 新增：接收后端传来的脱敏数据 ===
+        realNameMasked.value = data.real_name_masked || ''
+        idCardMasked.value = data.id_card_masked || ''
+        // ====================================
 
         if (data.app_background) {
             let bgUrl = data.app_background;
@@ -73,6 +83,10 @@ export const useUserStore =defineStore('user',()=>{
 
         isVerified.value = false
         isMinor.value = false
+
+        // === 新增：退出时清空安全数据 ===
+        realNameMasked.value = ''
+        idCardMasked.value = ''
     }
 
     function setHasPulledUserInfo(newStatus){
@@ -102,5 +116,7 @@ export const useUserStore =defineStore('user',()=>{
         isVerified,
         isMinor,
         setVerifyStatus, // 导出新方法
+        realNameMasked, // 导出供页面使用
+        idCardMasked    // 导出供页面使用
     }
 })

@@ -34,8 +34,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-3z7m2t(zqwg*u6it)v^de$b*ak6gjw!d5n++%wic&&qri#0ers'
 
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+# ==========================================
+# 安全加密配置
+# ==========================================
+ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
+
+# 为了防止线上环境忘记配置 .env 导致数据裸奔，这里做一个强制的安全阻断
+if not ENCRYPTION_KEY:
+    # 如果是在开发环境，可以给个临时密钥方便测试；如果是线上环境，直接报错阻止运行
+    if DEBUG:
+        ENCRYPTION_KEY = b'vA9M4_QpG8uN3fR_k2WjZ6xL0cY7mB5qT1nV8oP4eEw=' # 仅供本地无 .env 时测试用的伪密钥
+    else:
+        raise ValueError("致命错误：生产环境未在 .env 中找到 ENCRYPTION_KEY，出于安全原因系统拒绝启动！")
+
+# 确保密钥是 bytes 类型，这是 cryptography 库的要求
+if isinstance(ENCRYPTION_KEY, str):
+    ENCRYPTION_KEY = ENCRYPTION_KEY.encode('utf-8')
 
 ALLOWED_HOSTS = ['127.0.0.1',
                  'zhizhibuchengai.com.cn',       # 添加新顶级域名

@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.timezone import now, localtime
-
+from web.fields import EncryptedCharField
 
 def photo_upload_to(instance, filename):
     ext = filename.split('.')[-1]
@@ -23,8 +23,13 @@ class UserProfile(models.Model):
 
     profile = models.TextField(default='谢谢你的关注', max_length=500)
     # ================== 新增：实名认证与未成年人保护合规字段 ==================
-    real_name = models.CharField(max_length=50, null=True, blank=True, verbose_name="真实姓名")
-    id_card_number = models.CharField(max_length=18, unique=True, null=True, blank=True, verbose_name="身份证号")
+    # 1. 姓名与身份证号换用 EncryptedCharField，并将长度扩充至 255 容纳密文
+    real_name = EncryptedCharField(max_length=255, null=True, blank=True, verbose_name="真实姓名")
+    id_card_number = EncryptedCharField(max_length=255, null=True, blank=True, verbose_name="身份证号")
+
+    # 2. 新增 Hash 字段：用于替代明文进行 unique=True 查重（黑客即使拿到 Hash 也无法逆向出身份证号）
+    id_card_hash = models.CharField(max_length=64, unique=True, null=True, blank=True, verbose_name="身份证哈希防重")
+
     is_verified = models.BooleanField(default=False, verbose_name="是否已实名")
     is_minor = models.BooleanField(default=False, verbose_name="是否未成年")
     birth_date = models.DateField(null=True, blank=True, verbose_name="出生日期")
