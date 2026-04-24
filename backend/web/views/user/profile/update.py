@@ -49,16 +49,16 @@ class UpdateProfileView(APIView):
             # 2. 再处理背景（🚨 注意：这里和上面的 if photo 必须是对齐的！）
             if str(clear_app_background).lower() == 'true':
                 # 如果收到清除信号，删掉旧的自定义图（如果是 default 就不删）
-                if user_profile.app_background and 'default.png' not in user_profile.app_background.name:
+                if user_profile.app_background and 'default.jpg' not in user_profile.app_background.name:
                     try:
                         remove_old_photo(user_profile.app_background)
                     except:
                         pass
                 # 将数据库字段恢复为默认值
-                user_profile.app_background = 'user/app_backgrounds/default.png'
+                user_profile.app_background = 'user/app_backgrounds/default.jpg'
             elif app_background:
                 # 原本的上传新背景逻辑
-                if user_profile.app_background and 'default.png' not in user_profile.app_background.name:
+                if user_profile.app_background and 'default.jpg' not in user_profile.app_background.name:
                     try:
                         remove_old_photo(user_profile.app_background)
                     except:

@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userprofile',
             name='app_background',
-            field=models.ImageField(default='user/app_backgrounds/default.png', upload_to=web.models.user.app_background_upload_to, verbose_name='系统背景'),
+            field=models.ImageField(default='user/app_backgrounds/default.jpg', upload_to=web.models.user.app_background_upload_to, verbose_name='系统背景'),
         ),
     ]

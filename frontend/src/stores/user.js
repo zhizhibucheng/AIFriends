@@ -8,7 +8,7 @@ export const useUserStore =defineStore('user',()=>{
     const profile = ref('')
     const accessToken = ref('')
     const hasPulledUserInfo = ref(false)
-    const DEFAULT_BACKGROUND = '/media/user/app_backgrounds/default.png'
+    const DEFAULT_BACKGROUND = '/media/user/app_backgrounds/default.jpg'
 
     const appBackground = ref(DEFAULT_BACKGROUND)
 
@@ -41,7 +41,25 @@ export const useUserStore =defineStore('user',()=>{
         isMinor.value = data.is_minor || false
 
         if (data.app_background) {
-            appBackground.value = data.app_background
+            let bgUrl = data.app_background;
+
+            // 【修复开始】: 如果是带有 http/https 的绝对路径，转换为相对路径
+            if (bgUrl.startsWith('http')) {
+                try {
+                    const urlObj = new URL(bgUrl);
+                    bgUrl = urlObj.pathname; // 只提取 '/media/user/app_backgrounds/xxx.jpg'
+                } catch (e) {
+                    console.error('Invalid URL:', bgUrl);
+                }
+            }
+            // 【修复结束】
+
+            if (bgUrl.endsWith(DEFAULT_BACKGROUND)) {
+                 // 如果以默认背景结尾，保持 DEFAULT_BACKGROUND 不变
+                 appBackground.value = DEFAULT_BACKGROUND;
+            } else {
+                 appBackground.value = bgUrl;
+            }
         }
     }
 

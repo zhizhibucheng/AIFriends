@@ -47,14 +47,16 @@ onMounted(async ()=>{
 <template>
   <div
     class="fixed inset-0 z-[-1] transition-all duration-500"
-    :style="user.appBackground ? {
-      backgroundImage: `url(${user.appBackground})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      /* 注意：这里移除了 backgroundAttachment: 'fixed'，因为外层使用了 fixed 定位，已经达到了固定视口的效果，且移动端兼容性更好 */
-      backgroundColor: 'transparent'
-    } : {
-      backgroundColor: 'var(--fallback-b1,oklch(var(--b1)/1))'
+    :style="{
+      /* 始终保留底色，防止图片加载瞬间变白 */
+      backgroundColor: 'var(--fallback-b1,oklch(var(--b1)/1))',
+      /* 只有当图片存在时才叠加背景图 */
+      ...(user.appBackground ? {
+        backgroundImage: `url(${user.appBackground})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      } : {})
     }"
   ></div>
 

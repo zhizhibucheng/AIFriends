@@ -68,10 +68,36 @@ function handleSearch(){
 
       </nav>
 
-      <div class="flex-1 overflow-y-auto">
-        <slot></slot>
+      <div class="flex-1 overflow-y-auto flex flex-col">
+
+        <div class="flex-grow">
+          <slot></slot>
+        </div>
+
+        <footer class="footer footer-center p-4 py-6 bg-transparent mt-auto">
+          <div class="flex flex-col sm:flex-row gap-2 sm:gap-6 items-center justify-center w-full">
+
+            <p class="flex items-center gap-1">
+              <img :src="'/static/frontend/images/foot-icp.png'" class="w-4 h-4" alt="ICP备案">
+              <a href="https://beian.miit.gov.cn/" target="_blank"
+                 class="text-slate-100 hover:text-primary transition-all font-semibold drop-shadow-md text-xs sm:text-sm">
+                晋ICP备2026003601号-1
+              </a>
+            </p>
+
+            <p class="flex items-center gap-1">
+              <img :src="'/static/frontend/images/foot-ga.png'" class="w-4 h-4" alt="公安备案">
+              <a href="https://beian.mps.gov.cn/#/query/webSearch?code=14010902001851" target="_blank"
+                 class="text-slate-100 hover:text-primary transition-all font-semibold drop-shadow-md text-xs sm:text-sm">
+                晋公网安备14010902001851号
+              </a>
+            </p>
+
+          </div>
+        </footer>
+
       </div>
-    </div>
+      </div>
 
     <div class="drawer-side is-drawer-close:overflow-visible z-[60] h-full">
       <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
