@@ -14,8 +14,11 @@ const props = defineProps({
 
 const containerRef = ref(null);
 
+const MOBILE_BREAKPOINT = 640;
+const EDGE_PADDING = 8;
+
 // 动态容器尺寸，手机端设置为120，电脑端200
-const containerSize = ref(window.innerWidth < 640 ? 120 : 200);
+const containerSize = ref(getViewportRect().width < MOBILE_BREAKPOINT ? 120 : 200);
 
 let scene, camera, renderer, mixer, wrapper;
 let animationId;
@@ -40,6 +43,8 @@ onMounted(() => {
   setInitialPosition();
   initThreeJS();
   window.addEventListener('resize', onWindowResize);
+  window.visualViewport?.addEventListener('resize', onWindowResize);
+  window.visualViewport?.addEventListener('scroll', onWindowResize);
 });
 
 onBeforeUnmount(() => {
@@ -48,29 +53,85 @@ onBeforeUnmount(() => {
   if (renderer) renderer.dispose();
   if (scene) scene.clear();
   window.removeEventListener('resize', onWindowResize);
+  window.visualViewport?.removeEventListener('resize', onWindowResize);
+  window.visualViewport?.removeEventListener('scroll', onWindowResize);
 });
 
-function setInitialPosition() {
-  const isMobile = window.innerWidth < 640;
-  if (isMobile) {
-    // 手机端居中出生，防止一开始就在边缘卡住
-    posX = window.innerWidth * 0.25;
-    posY = window.innerHeight * 0.15;
-  } else {
-    posX = window.innerWidth / 2 + 300;
-    posY = window.innerHeight - 150;
-  }
-  // 初始化时立刻应用一次位置
+function getViewportRect() {
+  const viewport = window.visualViewport;
+  const width = viewport?.width || window.innerWidth;
+  const height = viewport?.height || window.innerHeight;
+  const left = viewport?.offsetLeft || 0;
+  const top = viewport?.offsetTop || 0;
+
+  return {
+    left,
+    top,
+    width,
+    height,
+    right: left + width,
+    bottom: top + height,
+  };
+}
+
+function getCompanionSize() {
+  return getViewportRect().width < MOBILE_BREAKPOINT ? 120 : 200;
+}
+
+function clamp(value, min, max) {
+  if (min > max) return (min + max) / 2;
+  return Math.min(max, Math.max(min, value));
+}
+
+function clampPosition() {
+  const rect = getViewportRect();
+  const margin = containerSize.value / 2 + EDGE_PADDING;
+  const nextX = clamp(posX, rect.left + margin, rect.right - margin);
+  const nextY = clamp(posY, rect.top + margin, rect.bottom - margin);
+  const hitEdge = nextX !== posX || nextY !== posY;
+
+  posX = nextX;
+  posY = nextY;
+
+  return hitEdge;
+}
+
+function getViewportCenter() {
+  const rect = getViewportRect();
+  return {
+    x: rect.left + rect.width / 2,
+    y: rect.top + rect.height / 2,
+  };
+}
+
+function applyPosition() {
   if (containerRef.value) {
     containerRef.value.style.transform = `translate3d(${posX}px, ${posY}px, 0)`;
   }
 }
 
+function setInitialPosition() {
+  const rect = getViewportRect();
+  const isMobile = rect.width < MOBILE_BREAKPOINT;
+  if (isMobile) {
+    posX = rect.left + rect.width * 0.25;
+    posY = rect.top + rect.height * 0.15;
+  } else {
+    posX = rect.left + rect.width / 2 + 300;
+    posY = rect.bottom - 150;
+  }
+  clampPosition();
+  applyPosition();
+}
+
 function onWindowResize() {
+  // 屏幕旋转或缩放时同步更新边界和画布大小
+  containerSize.value = getCompanionSize();
+  clampPosition();
+  applyPosition();
+
   if (!renderer || !camera) return;
   camera.updateProjectionMatrix();
-  // 屏幕旋转或缩放时同步更新边界和画布大小
-  containerSize.value = window.innerWidth < 640 ? 120 : 200;
   renderer.setSize(containerSize.value, containerSize.value, false);
 }
 
@@ -109,7 +170,7 @@ function initThreeJS() {
     wrapper.add(model);
 
     // 核心修改点：手机端按比例再缩小模型，防止显得过大
-    const isMobile = window.innerWidth < 640;
+    const isMobile = getViewportRect().width < MOBILE_BREAKPOINT;
     const baseHeight = charConfig.targetHeight || 3.0;
     const targetHeight = isMobile ? baseHeight * 0.85 : baseHeight; // 手机端缩放至 85%
 
@@ -188,30 +249,13 @@ function animate(time) {
       posX += Math.cos(moveAngle) * charConfig.speed * delta;
       posY += Math.sin(moveAngle) * charConfig.speed * delta;
 
-      // 使用动态的 margin 限制边界，根据画布大小自适应，防止人物走出屏幕
-      const margin = containerSize.value / 2;
-      let hitEdge = false;
-
-      if (posX > window.innerWidth - margin) {
-          posX = window.innerWidth - margin;
-          hitEdge = true;
-      } else if (posX < margin) {
-          posX = margin;
-          hitEdge = true;
-      }
-
-      if (posY > window.innerHeight - margin) {
-          posY = window.innerHeight - margin;
-          hitEdge = true;
-      } else if (posY < margin) {
-          posY = margin;
-          hitEdge = true;
-      }
+      const hitEdge = clampPosition();
 
       if (hitEdge) {
+          const viewportCenter = getViewportCenter();
           const angleToCenter = Math.atan2(
-            window.innerHeight / 2 - posY,
-            window.innerWidth / 2 - posX
+            viewportCenter.y - posY,
+            viewportCenter.x - posX
           );
           moveAngle = angleToCenter + (Math.random() * Math.PI / 2 - Math.PI / 4);
 
@@ -223,11 +267,12 @@ function animate(time) {
       wrapper.rotation.y += (targetRotation - wrapper.rotation.y) * 5 * delta;
 
     } else if (currentStateName === 'idle') {
+      clampPosition();
       wrapper.rotation.y += (0 - wrapper.rotation.y) * 2 * delta;
     }
 
     // 🚀 性能优化 2：直接操作 DOM 的 translate3d，开启 GPU 硬件加速，极其丝滑
-    containerRef.value.style.transform = `translate3d(${posX}px, ${posY}px, 0)`;
+    applyPosition();
   }
 
   renderer.render(scene, camera);
