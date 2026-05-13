@@ -31,6 +31,7 @@ class GetSingleCharacterView(APIView):
                     'background_image': character.background_image.url,
                     'voice_id': character.voice.id,
                     'is_public': character.is_public,  # 新增：返回状态供前端回显
+                    'avatar_type': character.avatar_type,
                 },
                 'voices': voices,
 

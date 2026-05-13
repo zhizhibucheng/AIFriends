@@ -28,6 +28,15 @@ class Voice(models.Model):
 
 
 class Character(models.Model):
+    # --- 新增：3D实体形态选项 ---
+    AVATAR_CHOICES = (
+        ('none', '无'),
+        ('male', '男性'),
+        ('female', '女性'),
+        ('dog', '小狗'),
+        ('cat', '小猫'),
+    )
+
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     photo = models.ImageField(upload_to=photo_upload_to)
@@ -35,6 +44,8 @@ class Character(models.Model):
     profile = models.TextField(max_length=100000)
     background_image = models.ImageField(upload_to=background_image_upload_to)
     is_public = models.BooleanField(default=True, verbose_name="是否公开")
+    avatar_type = models.CharField(max_length=20, choices=AVATAR_CHOICES, default='none', verbose_name="3D模型类型")
+
     create_time = models.DateTimeField(default=now)
     update_time = models.DateTimeField(default=now)
 

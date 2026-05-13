@@ -10,7 +10,9 @@ import {base64ToFile} from "@/js/utils/base64_to_file.js";
 import {useUserStore} from "@/stores/user.js";
 import {useRoute, useRouter} from "vue-router";
 import Voice from "@/views/create/character/components/Voice.vue";
-
+import Visibility from "@/views/create/character/components/Visibility.vue";
+// 新增：重新把 3D 模型组件引回来
+import AvatarType from "@/views/create/character/components/AvatarType.vue";
 
 const user =useUserStore()
 const router = useRouter()
@@ -20,8 +22,6 @@ const character = ref(null)
 
 const voices = ref([])
 const curVoiceId = ref(null)
-
-const isPublic = ref(true)
 
 
 onMounted(async ()=> {
@@ -36,9 +36,6 @@ onMounted(async ()=> {
       character.value = data.character
       voices.value = data.voices
       curVoiceId.value = data.character.voice_id
-      if (data.character.is_public !== undefined) {
-          isPublic.value = data.character.is_public
-      }
     }
   }catch(err){
   }
@@ -49,6 +46,8 @@ const nameRef = useTemplateRef('name-ref')
 const voiceRef = useTemplateRef('voice-ref')
 const profileRef = useTemplateRef('profile-ref')
 const backgroundImageRef = useTemplateRef('background-image-ref')
+const visibilityRef = useTemplateRef('visibility-ref')
+
 const errorMessage = ref('')
 async function handleUpdate(){
   const photo = photoRef.value.myPhoto
@@ -56,6 +55,7 @@ async function handleUpdate(){
   const voice = voiceRef.value.myVoice
   const profile = profileRef.value.myProfile?.trim()
   const backgroundImage = backgroundImageRef.value.myBackgroundImage
+  const isPublic = visibilityRef.value.myIsPublic
 
   errorMessage.value = ''
   if(!photo){
@@ -74,14 +74,16 @@ async function handleUpdate(){
     formData.append('name',name)
     formData.append('voice_id', voice)
     formData.append('profile', profile)
-    formData.append('is_public', isPublic.value)
+    formData.append('is_public', isPublic)
+
+    // 注意：这里我们故意不获取也不提交 avatar_type，从根源断绝修改的可能
+
     if(photo !== character.value.photo){
       formData.append('photo', base64ToFile(photo,'photo.png'))
     }
     if(backgroundImage !== character.value.background_image){
        formData.append('background_image', base64ToFile(backgroundImage,'background_image.png'))
     }
-
 
     try{
       const res = await api.post('/api/create/character/update/', formData)
@@ -112,14 +114,9 @@ async function handleUpdate(){
        <Name ref="name-ref" :name="character.name"/>
        <Voice ref="voice-ref" :voices="voices" :curVoiceId="curVoiceId"/>
 
-       <fieldset class="fieldset mt-4 w-full">
-         <legend class="fieldset-legend text-base font-bold">可见性状态</legend>
-         <select v-model="isPublic" class="select select-bordered w-full bg-base-100/70">
-           <option :value="true">公开</option>
-           <option :value="false">私密</option>
-         </select>
-       </fieldset>
+       <AvatarType :avatarType="character.avatar_type" :disabled="true" />
 
+       <Visibility ref="visibility-ref" :isPublic="character.is_public" />
        <Profile ref="profile-ref" :profile="character.profile"/>
        <BackgroundImage ref="background-image-ref" :backgroundImage="character.background_image"/>
 

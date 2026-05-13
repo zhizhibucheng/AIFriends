@@ -17,6 +17,7 @@ class CreateCharacterView(APIView):
             profile = request.data.get('profile').strip()[:100000]
             photo = request.FILES.get('photo',None)
             background_image = request.FILES.get('background_image', None)
+            avatar_type = request.data.get('avatar_type', 'none')
 
             is_public_raw = request.data.get('is_public', True)
             is_public = str(is_public_raw).lower() in ['true', '1', 't']
@@ -48,6 +49,7 @@ class CreateCharacterView(APIView):
                 photo=photo,
                 background_image=background_image,
                 is_public=is_public,
+                avatar_type=avatar_type,
             )
             return Response({
                 'result': 'success',

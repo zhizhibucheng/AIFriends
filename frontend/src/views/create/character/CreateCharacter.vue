@@ -10,7 +10,8 @@ import {base64ToFile} from "@/js/utils/base64_to_file.js";
 import {useUserStore} from "@/stores/user.js";
 import {useRouter} from "vue-router";
 import Voice from "@/views/create/character/components/Voice.vue";
-
+import AvatarType from "@/views/create/character/components/AvatarType.vue";
+import Visibility from "@/views/create/character/components/Visibility.vue";
 
 const user =useUserStore()
 const router = useRouter()
@@ -19,6 +20,8 @@ const voiceRef = useTemplateRef('voice-ref')
 const nameRef = useTemplateRef('name-ref')
 const profileRef = useTemplateRef('profile-ref')
 const backgroundImageRef = useTemplateRef('background-image-ref')
+const avatarTypeRef = useTemplateRef('avatar-type-ref')
+const visibilityRef = useTemplateRef('visibility-ref')
 const errorMessage = ref('')
 
 const voices = ref([])
@@ -45,7 +48,8 @@ async function handleCreate(){
   const voice = voiceRef.value.myVoice
   const profile = profileRef.value.myProfile?.trim()
   const backgroundImage = backgroundImageRef.value.myBackgroundImage
-
+  const avatarType = avatarTypeRef.value.myAvatarType
+  const isPublicValue = visibilityRef.value.myIsPublic
   errorMessage.value = ''
   if(!photo){
     errorMessage.value='头像不能为空'
@@ -64,7 +68,8 @@ async function handleCreate(){
     formData.append('profile', profile)
     formData.append('photo', base64ToFile(photo,'photo.png'))
     formData.append('background_image', base64ToFile(backgroundImage,'background_image.png'))
-    formData.append('is_public', isPublic.value)
+    formData.append('is_public', isPublicValue)
+    formData.append('avatar_type', avatarType)
 
     try{
       const res = await api.post('/api/create/character/create/', formData)
@@ -94,14 +99,9 @@ async function handleCreate(){
        <Photo ref="photo-ref"/>
        <Name ref="name-ref"/>
        <Voice ref="voice-ref" :voices="voices" :curVoiceId="curVoiceId"/>
+       <AvatarType ref="avatar-type-ref"/>
 
-       <fieldset class="fieldset mt-4 w-full">
-         <legend class="fieldset-legend text-base font-bold">可见性状态</legend>
-         <select v-model="isPublic" class="select select-bordered w-full bg-base-100/70">
-           <option :value="true">公开</option>
-           <option :value="false">私密</option>
-         </select>
-       </fieldset>
+       <Visibility ref="visibility-ref" />
 
        <Profile ref="profile-ref"/>
        <BackgroundImage ref="background-image-ref"/>
